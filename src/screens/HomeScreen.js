@@ -68,7 +68,8 @@ const emailVerificationBtn= ()=>{
         completed: false,
         userId: auth.currentUser.uid
       })
-       console.log("Document written with ID: ", docRef);
+      //  console.log("Document written with ID: ", docRef);
+      setLoading(true);
       alert(`todo added successfully ` );
     }
 }
@@ -78,10 +79,12 @@ const emailVerificationBtn= ()=>{
     const q = query(collection(db, "todo"), where("userId", "==", auth.currentUser.uid));
 
     const querySnapshot = await getDocs(q);
-      let toDos = [];
+      const toDos = []
       querySnapshot.forEach((doc) => {
       let todo = doc.data();
+     
       todo.id = doc.id;
+       
       toDos.push(todo);
       
     });
@@ -93,8 +96,9 @@ const emailVerificationBtn= ()=>{
   if(loading){
     loadTodos();
   };
+  
   // useEffect(()=>{
-    // loadTodos();
+  //   loadTodos();
   // },[]);
   const checkToDoItem =  async ({item, isChecked}) => {
     // console.log(item);
@@ -114,11 +118,11 @@ const emailVerificationBtn= ()=>{
     // console.log(item);
       return(
     
- <SafeAreaView  style={{flex:1, justifyContent:"center"}} >
-          <ScrollView style={{  margin:15 }} >
+
+        <View style={{ backgroundColor:"#d8ded9",margin:10, borderRadius:15}}>
             
 
-            <View style={{ flex: 1, flexDirection: "row", margin: 5, padding: 5, justifyContent: "space-between" }} >
+            <View style={{ flexDirection: "row", margin: 5, padding:5, justifyContent: "space-between" }} >
               <View>
                 <BouncyCheckbox
                   isChecked={item.completed}
@@ -133,7 +137,7 @@ const emailVerificationBtn= ()=>{
                 />
               </View>
               <View style={{ flexDirection: "row", justifyContent: "space-between", }}>
-                <Pressable style={styles.buttonE} onPress={() => navigation.navigate("UpScreen", { item })} >
+                <Pressable style={styles.buttonE} onPress={() => navigation.navigate("UpScreen", { item, setLoading })} >
                   <Text style={styles.text}>Edit</Text>
                 </Pressable>
                 <Pressable style={styles.buttonD} onPress={() => showConfirmDialog(item.id)}>
@@ -143,13 +147,13 @@ const emailVerificationBtn= ()=>{
 
               </View>
             </View> 
-          </ScrollView>
- </SafeAreaView>
+          </View>
+
 
 
         
  
-      )
+      );
   };
   const showConfirmDialog = (d) => {
     return Alert.alert(
@@ -171,11 +175,13 @@ const emailVerificationBtn= ()=>{
  
   const showAllTodos =  () =>{
        return(
-         <SafeAreaView style={{  marginBottom:20}}>
+         <SafeAreaView style={{marginBottom:15}} >
            <FlatList
              data={toDos}
              renderItem={renderItem}
              keyExtractor={item => item.id}
+            
+             
            />
         </SafeAreaView>
          

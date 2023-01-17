@@ -3,14 +3,16 @@ import React, { useState } from 'react'
 import { db } from '../../firebase.init'
 
 import { collection, doc, Firestore, getDocs, updateDoc } from 'firebase/firestore'
+import { useNavigation } from '@react-navigation/native'
 
-export default function UpScreen({ route, navigation }) {
+export default function UpScreen({ route }) {
     // const  navigation = useNavigation();
-  // console.log(route.params.item.text)
+const navigation = useNavigation();
   // const docRef = doc(db, "todo", route.params.item.id )
-    // console.log(docRef);
+  console.log(route.params.setLoading);
+  const loading = route.params.setLoading
   const [changeTodoText, setchangeTodoText] = useState(route.params.item.text);
-
+// console.log(changeTodoText);
   const updateToDo = async () => {
   
     const ref = doc(db, 'todo', route.params.item.id)
@@ -18,14 +20,16 @@ export default function UpScreen({ route, navigation }) {
       text: changeTodoText,
       
     }).then(() => {
-      alert("Updated");
       navigation.navigate("todo");
+      loading(true)
     }).catch((error) => {
-      alert(error.message)
+      console.log5(error)
     })
   
     
-  }
+  };
+  const [refreshing, setRefreshing] = React.useState(false);
+  
   return (
   <SafeAreaView> 
     <View style={{ height: 150, backgroundColor: "green", marginTop: 100, alignItems: "center" }}>
